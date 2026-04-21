@@ -84,10 +84,11 @@ PE=$(sf_dq_json "SELECT COUNT(Id) c FROM ProgramEnrollment WHERE AccountId != nu
 ok "ProgramEnrollment rows with AccountId: $PE"
 
 # --- STEP 6 ---
-step 6 "Eligibility metadata still greenfield (expected until you configure rules)"
+step 6 "Eligibility configuration (counts; optional sample from docs)"
 EEC=$(sf_dq_json "SELECT COUNT(Id) c FROM EnrollmentEligibilityCriteria" | jq -r '.result.records[0].c // 0')
 PEC=$(sf_dq_json "SELECT COUNT(Id) c FROM ProgramEnrlEligibilityCrit" | jq -r '.result.records[0].c // 0')
-ok "EnrollmentEligibilityCriteria count=$EEC; ProgramEnrlEligibilityCrit count=$PEC (expected 0 until you configure rules)"
+SAMPLE=$(sf_dq_json "SELECT COUNT(Id) c FROM EnrollmentEligibilityCriteria WHERE Name = 'ISANS Sample - LINC age gate (demo rule)'" | jq -r '.result.records[0].c // 0')
+ok "EnrollmentEligibilityCriteria=$EEC; ProgramEnrlEligibilityCrit=$PEC (optional doc sample rows: $SAMPLE; see docs/06-sample-eligibility-records.md)"
 
 # --- STEP 7 ---
 step 7 "Optional: permission set metadata in repo (local file check)"

@@ -38,12 +38,13 @@ When it prints **All automated checks passed**, use this checklist in the Salesf
 2. Sample a few **Program Enrollment** records: confirm **Account** is populated (Person Account model for this org).
 3. Open one linked **Account** and confirm **Person Account** is checked (or equivalent Person Account UI).
 
-## 5. Eligibility (future / greenfield)
+## 5. Eligibility (sample row + Expression Set plumbing)
 
-Until you configure **Enrollment Eligibility Criteria** and **Program Enrollment Eligibility Criteria** (junction) with **Expression Sets**, there is nothing to “test” for automated eligibility beyond confirming the objects are empty or editable in Setup.
+A **sample** criteria row and junction may already exist (created in-org or via `./scripts/seed-isans-eligibility-sample.sh`). Details: [06-sample-eligibility-records.md](06-sample-eligibility-records.md).
 
-1. **Setup → Object Manager → Enrollment Eligibility Criteria** — confirm you can create a test record (optional smoke test).
-2. When `EligibilityService` Apex exists, add Apex tests and re-run `./scripts/verify-isans-setup.sh` after extending it.
+1. **Setup → Object Manager → Enrollment Eligibility Criteria** (or App Launcher / list views if exposed) — open **`ISANS Sample - LINC age gate (demo rule)`** and confirm **`Execution Procedure`** points at **`Repair Eligibility`** (demo Expression Set only).
+2. Open **`Program Enrollment Eligibility Criteria`** (API `ProgramEnrlEligibilityCrit`) for **`ISANS - LINC`** and confirm it links to that criteria row with **Required** checked if your layout shows `IsRequired`.
+3. When `EligibilityService` Apex exists, add Apex tests and extend `./scripts/verify-isans-setup.sh` if you add new invariants.
 
 ## 6. GitHub (CI optional)
 

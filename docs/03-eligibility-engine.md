@@ -152,7 +152,11 @@ Preferred over putting a text field directly on `EnrollmentEligibilityCriteria` 
 - No `Logic_Operator__c` / `Target_Value__c` / `Data_Type__c` fields.
 - No `Eligibility_Question_Mapping__c` object unless a concrete rule proves it necessary (deferred).
 
-## 10. Open items
+## 10. On-org sample (optional)
+
+For a minimal **criteria row + program junction** you can inspect in Setup or SOQL, see [06-sample-eligibility-records.md](06-sample-eligibility-records.md) and run [`scripts/seed-isans-eligibility-sample.sh`](../scripts/seed-isans-eligibility-sample.sh) in orgs that do not already have that sample.
+
+## 11. Open items
 
 - Final decision on whether each Expression Set runs per-criterion or one "mega Expression Set" per Program. Default: per-criterion, for diagnosability.
 - Concrete field list for `clientProfile` in §5 — depends on whether ISANS extends `Contact` or introduces `ISANS_Client_Profile__c`. Pending client-model doc.
