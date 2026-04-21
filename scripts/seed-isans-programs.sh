@@ -5,7 +5,7 @@
 # Usage:
 #   ./scripts/seed-isans-programs.sh [--force] [--target-org ALIAS]
 #
-# Requires: sf CLI, jq
+# Requires: sf CLI, jq, python3
 #
 # If you ever need to remove seeded Programs, delete related ProgramRecommendationRule
 # rows first (the org may auto-create them), then delete Program records.
@@ -23,6 +23,12 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+sf_query_json() {
+  local q="$1"
+  sf data query --query "$q" --target-org "$TARGET_ORG" --json 2>/dev/null \
+    | python3 -c 'import sys,json; r=sys.stdin.read(); i=r.find("{"); sys.stdout.write(json.dumps(json.loads(r[i:])))'
+}
+
 jq_id() {
   jq -r '.result.records[0].Id // empty' 2>/dev/null
 }
@@ -33,10 +39,7 @@ create_id() {
 }
 
 existing_isans() {
-  sf data query \
-    --query "SELECT COUNT(Id) cnt FROM Program WHERE Name LIKE 'ISANS -%'" \
-    --target-org "$TARGET_ORG" \
-    --json 2>/dev/null | jq -r '.result.records[0].cnt // 0'
+  sf_query_json "SELECT COUNT(Id) cnt FROM Program WHERE Name LIKE 'ISANS -%'" | jq -r '.result.records[0].cnt // 0'
 }
 
 if [[ "$(existing_isans)" != "0" && "$FORCE" -ne 1 ]]; then
@@ -46,10 +49,10 @@ if [[ "$(existing_isans)" != "0" && "$FORCE" -ne 1 ]]; then
 fi
 
 echo "Resolving BenefitType Ids on $TARGET_ORG..."
-BT_INSTR=$(sf data query --query "SELECT Id FROM BenefitType WHERE Name = 'Instructor Led Learning' LIMIT 1" --target-org "$TARGET_ORG" --json | jq_id)
-BT_SESS=$(sf data query --query "SELECT Id FROM BenefitType WHERE Name = 'Sessions' LIMIT 1" --target-org "$TARGET_ORG" --json | jq_id)
-BT_APP=$(sf data query --query "SELECT Id FROM BenefitType WHERE Name = 'Application Assistance' LIMIT 1" --target-org "$TARGET_ORG" --json | jq_id)
-BT_COACH=$(sf data query --query "SELECT Id FROM BenefitType WHERE Name = 'Personalized Coaching Time' LIMIT 1" --target-org "$TARGET_ORG" --json | jq_id)
+BT_INSTR=$(sf_query_json "SELECT Id FROM BenefitType WHERE Name = 'Instructor Led Learning' LIMIT 1" | jq_id)
+BT_SESS=$(sf_query_json "SELECT Id FROM BenefitType WHERE Name = 'Sessions' LIMIT 1" | jq_id)
+BT_APP=$(sf_query_json "SELECT Id FROM BenefitType WHERE Name = 'Application Assistance' LIMIT 1" | jq_id)
+BT_COACH=$(sf_query_json "SELECT Id FROM BenefitType WHERE Name = 'Personalized Coaching Time' LIMIT 1" | jq_id)
 
 for v in BT_INSTR BT_SESS BT_APP BT_COACH; do
   if [[ -z "${!v}" ]]; then
