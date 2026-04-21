@@ -72,7 +72,9 @@ Notable custom fields already present:
 
 - `ProgramEnrollment.AccountId` (Lookup to Account) and `ProgramEnrollment.ContactId` (Lookup to Contact) both exist.
 - `Program` itself has **no** client lookup — clients are only linked through `ProgramEnrollment`.
-- Case → client path is an **open question** on the plan; both options are viable on this org.
+- **Person Accounts: DISABLED** on `vscodeOrg` (`Account.IsPersonAccount = false` on sampled rows). Therefore a client is always **Account + Contact**, never a single Person Account row.
+- **Case → client decision (resolved):** `Case.ContactId` is the client; `Case.AccountId` is the client's owning household/record Account. Both fields exist on Case (verified via `FieldDefinition`).
+- Practical consequence: each ISANS client requires a paired `(Account, Contact)` — either an NPSP-style private household Account per client or a shared "ISANS Clients" Account bucket. See [04-client-model.md](04-client-model.md) (TBD) for the decision.
 
 ## 6. Relationship map (verified)
 
@@ -100,11 +102,14 @@ flowchart TB
   EnrollmentEligibilityCriteria -->|ExecutionProcedureId Lookup| ExpressionSet
 ```
 
-## 7. Open questions (must resolve before build)
+## 7. Open questions — status
 
-1. **Case → client**: `Case.AccountId` (Person Account) or `Case.ContactId → Contact.AccountId`?
-2. **Benefit-level enrollment model**: confirm the attendance/disbursement pattern in §4 is acceptable, or introduce a custom junction anyway for explicit seat/funder assignment per benefit.
-3. **Source-document authority**: custom field on `ProgramEnrlEligibilityCrit`, a new `Assessment_Source_Document__c`, or an existing org object we haven't yet found?
-4. **Expression Set input contract**: what context (client record, AssessmentQuestionResponse list) does each Expression Set expect? This drives the Apex caller signature.
-5. **`NGO_CaseMan_*` package**: identify the installed package providing these fields (Object Manager → field details → “Managed Package”) — affects deployability and upgrades.
-6. **`CGC_Program__c`** (seen earlier in `%Program%` search): unrelated demo custom object, or part of the ISANS footprint? Confirm and ignore if unrelated.
+| # | Question | Status | Answer / next step |
+|---|----------|--------|---------------------|
+| 1 | Case → client wiring | **Resolved** | `Case.ContactId` is the client; `Case.AccountId` is the owning Account. Person Accounts disabled. |
+| 2 | Benefit-level enrollment model | Open | No `ProgramEnrollment` or `Benefit` records exist yet on `vscodeOrg`. Attendance/disbursement pattern from §4 is viable; still need user call on whether to add a dedicated join for seat+funder. |
+| 3 | Source-document authority | Open | Decision deferred — proposing `Assessment_Source_Document__c` (master) + `Source_Document__c` lookup on `ProgramEnrlEligibilityCrit` in [03-eligibility-engine.md](03-eligibility-engine.md). |
+| 4 | Expression Set input contract | Open | The 2 ExpressionSet records on org (`Repair Eligibility`, `Cirrus - Commerce Default Pricing Procedure`) are demo assets, not ISANS rules. Input contract must be **defined by us** when we author the first ISANS rule. See [03-eligibility-engine.md](03-eligibility-engine.md). |
+| 5 | `NGO_CaseMan_*` package | **Resolved** | Fields have `NamespacePrefix = null` — they are **unpackaged, org-local** custom fields, not from a managed package. No upgrade/deploy risk; we own them. |
+| 6 | `CGC_Program__c` | **Resolved** | Unrelated demo object. Fields include `Completed_Exercises__c`, `Completed_Milestones__c`, `Milestone_Icon_Type__c`, rollup of "Demo Section". Safe to ignore. |
+| 7 | **NEW — Data API access to NPC objects** | Open (blocker for Apex) | `EntityDefinition.IsQueryable = true` for `Program`/`Benefit`/etc via Tooling API, but `SELECT ... FROM Program` via the standard Data API returns `sObject type 'Program' is not supported`. The authed CLI user is missing Object-level Read on the NPC entities. Must be fixed before any SOQL/Apex touches these objects. |
