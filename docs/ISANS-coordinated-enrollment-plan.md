@@ -39,7 +39,14 @@ An earlier draft of this plan was written in another Cursor workspace (alongside
 
 ## Target org verification (latest)
 
-Pinned CLI org **`vscodeOrg`**: object-level pass/fail and reproduce commands are in [org-object-verification-vscodeOrg.md](org-object-verification-vscodeOrg.md).
+**`vscodeOrg` is the pinned org and now has the NPC stack** (after permission-set update). Full matrix in [org-object-verification-vscodeOrg.md](org-object-verification-vscodeOrg.md). Key takeaways:
+
+- **Present**: `Program`, `Benefit`, `BenefitSchedule`, `BenefitSession`, `ProgramEnrollment`, `ProgramEnrlEligibilityCrit`, `EnrollmentEligibilityCriteria`, `AssessmentQuestion`.
+- **Naming correction**: Use **`AssessmentQuestionResponse`** (this org) instead of canvas term `AssessmentResponse`.
+- **Missing vs canvas**: `BenefitEnrollment` and `AssessmentQuestionSourceDocument` — decide per-object whether to (a) remap to another existing object or (b) introduce a custom object.
+- **Tooling note**: Querying the NPC objects requires `sf data query --use-tooling-api` in this org, not the default data API.
+
+Alternate auth: [org-object-verification-donor-demo.md](org-object-verification-donor-demo.md) documents `donor-demo` for reference; it is **not** the active project default.
 
 ## Goals (milestone 1)
 

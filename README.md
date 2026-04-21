@@ -1,6 +1,6 @@
 # Salesforce DX Project: Next Steps
 
-**ISANS demo:** Coordinated NPC enrollment (programs, benefits, eligibility, funder seats, support services) is specified in [docs/ISANS-coordinated-enrollment-plan.md](docs/ISANS-coordinated-enrollment-plan.md), including milestone 1 (spec + prompts + diagrams) and deferred phase 2 (build/deploy). **Org vs plan (pinned `vscodeOrg`):** [docs/org-object-verification-vscodeOrg.md](docs/org-object-verification-vscodeOrg.md).
+**ISANS demo:** Coordinated NPC enrollment (programs, benefits, eligibility, funder seats, support services) is specified in [docs/ISANS-coordinated-enrollment-plan.md](docs/ISANS-coordinated-enrollment-plan.md), including milestone 1 (spec + prompts + diagrams) and deferred phase 2 (build/deploy). **Org vs plan:** [docs/org-object-verification-vscodeOrg.md](docs/org-object-verification-vscodeOrg.md) — pinned org **`vscodeOrg`** has the NPC `Program` stack (after permission-set update). Alternate: [docs/org-object-verification-donor-demo.md](docs/org-object-verification-donor-demo.md).
 
 Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
 
