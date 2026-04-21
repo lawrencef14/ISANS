@@ -132,4 +132,4 @@ The org is not empty — it is a generic NPC demo with **pre-populated records**
 | `AssessmentQuestionResponse` | 3 | Minimal sample responses. |
 | `Account` (Person) | 6,573 | Existing client pool we can reuse. |
 
-**Decision needed before Milestone-1 build:** does ISANS mode **add** programs (e.g., LINC) on top of this generic demo, or do we **reset** the demo to an ISANS-only footprint? Default assumption: **add** (cheaper, reversible, lets us test coexistence with pre-existing attendance rollups).
+**Decision (Milestone-1 footprint):** **(A) Add alongside** — new ISANS programs (e.g., LINC, settlement services) are created in addition to the five generic demo programs. Existing enrollments, benefits, and sessions are left intact so we can validate coexistence and attendance rollups without destructive cleanup.
