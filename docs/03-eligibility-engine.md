@@ -67,13 +67,14 @@ public class EligibilityService {
         public Id sourceDocumentId;
     }
 
-    public static EligibilityResult evaluate(Id clientContactId, Id programId) { ... }
+    // Person Account convention on vscodeOrg: clientAccountId is the canonical client identifier.
+    public static EligibilityResult evaluate(Id clientAccountId, Id programId) { ... }
 }
 ```
 
 The caller iterates `ProgramEnrlEligibilityCrit` rows for `programId`, resolves each linked `ExpressionSet`, and invokes it through the `ConnectApi.BusinessRulesEngine`/`ExpressionSet` Apex hook. Each Expression Set gets a stable input bag (see §5).
 
-> **Open item (from [02-data-model.md §7 #7](02-data-model.md#7-open-questions--status))**: the running user must have Object-level Read on `Program`, `Benefit`, `ProgramEnrollment`, `ProgramEnrlEligibilityCrit`, `EnrollmentEligibilityCriteria`. Without it, SOQL returns `sObject not supported`. Fix via a Permission Set before any `EligibilityService` integration test will run.
+> **Pre-req (resolved):** the running user needs the NPC Permission Set Licenses (`BenefitManagementPermissionSetLicense`, `IndustriesAssessmentPsl`, `ProgramManagementPsl`, `Salesforce_org_NonprofitCloudCaseManagementPsl`) AND the standard permission sets that consume them (`AdvancedProgramManagement`, `BenefitManagementPermissionSetLicense`, `IndustriesAssessmentPermissionSet`). Additionally assign the repo's `ISANS_Case_Worker` permission set for object-level CRUD. See [02-data-model.md §7 row 7](02-data-model.md#7-open-questions--status).
 
 ## 5. Standard Expression Set input contract
 
@@ -81,8 +82,8 @@ Every ISANS Expression Set MUST declare the **same root input type**. Proposed s
 
 ```
 ISANS_EligibilityInput {
-  clientContactId : Id
-  clientAccountId : Id
+  clientAccountId : Id            // Person Account — canonical client identifier
+  clientContactId : Id            // Auto-linked Contact (convenience for Discovery Framework joins)
   caseId          : Id (nullable)
   programId       : Id
   responses       : List<{
@@ -99,7 +100,7 @@ ISANS_EligibilityInput {
       countryOfOrigin : String
       languageHome    : String
       residencyStatus : String
-      // ...fields we confirm exist on Contact or an ISANS extension object
+      // ...fields live on the Person Account (or an ISANS_Client_Profile__c extension)
   }
 }
 ```

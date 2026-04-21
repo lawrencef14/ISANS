@@ -72,9 +72,10 @@ Notable custom fields already present:
 
 - `ProgramEnrollment.AccountId` (Lookup to Account) and `ProgramEnrollment.ContactId` (Lookup to Contact) both exist.
 - `Program` itself has **no** client lookup — clients are only linked through `ProgramEnrollment`.
-- **Person Accounts: DISABLED** on `vscodeOrg` (`Account.IsPersonAccount = false` on sampled rows). Therefore a client is always **Account + Contact**, never a single Person Account row.
-- **Case → client decision (resolved):** `Case.ContactId` is the client; `Case.AccountId` is the client's owning household/record Account. Both fields exist on Case (verified via `FieldDefinition`).
-- Practical consequence: each ISANS client requires a paired `(Account, Contact)` — either an NPSP-style private household Account per client or a shared "ISANS Clients" Account bucket. See [04-client-model.md](04-client-model.md) (TBD) for the decision.
+- **Person Accounts: ENABLED.** `Account.IsPersonAccount = true` on 6,573 of 6,752 Accounts on `vscodeOrg`; the remaining 179 are business Accounts.
+- **Observed convention in existing data:** all 3,004 `ProgramEnrollment` records use `AccountId` (pointing to a Person Account), and **zero** use `ContactId`. We MUST honor this pattern — the client identity is the **Person Account**.
+- **Case → client decision (resolved):** wire `Case.AccountId` to the Person Account. `Case.ContactId` can be populated (Person Account auto-creates a linked Contact) but the Account is canonical.
+- Practical consequence: no new "ISANS client" wrapper object is needed. An ISANS client = a Person Account. Any client-level extension fields go on Account (or a custom `ISANS_Client_Profile__c` with a Master-Detail to Account).
 
 ## 6. Relationship map (verified)
 
@@ -106,10 +107,29 @@ flowchart TB
 
 | # | Question | Status | Answer / next step |
 |---|----------|--------|---------------------|
-| 1 | Case → client wiring | **Resolved** | `Case.ContactId` is the client; `Case.AccountId` is the owning Account. Person Accounts disabled. |
+| 1 | Case → client wiring | **Resolved** | Person Accounts ENABLED (6,573 Person, 179 business). Existing 3,004 enrollments use `ProgramEnrollment.AccountId` exclusively. Wire `Case.AccountId` to the Person Account. |
 | 2 | Benefit-level enrollment model | Open | No `ProgramEnrollment` or `Benefit` records exist yet on `vscodeOrg`. Attendance/disbursement pattern from §4 is viable; still need user call on whether to add a dedicated join for seat+funder. |
 | 3 | Source-document authority | Open | Decision deferred — proposing `Assessment_Source_Document__c` (master) + `Source_Document__c` lookup on `ProgramEnrlEligibilityCrit` in [03-eligibility-engine.md](03-eligibility-engine.md). |
 | 4 | Expression Set input contract | Open | The 2 ExpressionSet records on org (`Repair Eligibility`, `Cirrus - Commerce Default Pricing Procedure`) are demo assets, not ISANS rules. Input contract must be **defined by us** when we author the first ISANS rule. See [03-eligibility-engine.md](03-eligibility-engine.md). |
 | 5 | `NGO_CaseMan_*` package | **Resolved** | Fields have `NamespacePrefix = null` — they are **unpackaged, org-local** custom fields, not from a managed package. No upgrade/deploy risk; we own them. |
 | 6 | `CGC_Program__c` | **Resolved** | Unrelated demo object. Fields include `Completed_Exercises__c`, `Completed_Milestones__c`, `Milestone_Icon_Type__c`, rollup of "Demo Section". Safe to ignore. |
-| 7 | **NEW — Data API access to NPC objects** | Open (blocker for Apex) | `EntityDefinition.IsQueryable = true` for `Program`/`Benefit`/etc via Tooling API, but `SELECT ... FROM Program` via the standard Data API returns `sObject type 'Program' is not supported`. The authed CLI user is missing Object-level Read on the NPC entities. Must be fixed before any SOQL/Apex touches these objects. |
+| 7 | Data API access to NPC objects | **Resolved** | Root cause was missing **Permission Set Licenses**, not object-level Read. Fix deployed in this repo as [`force-app/main/default/permissionsets/ISANS_Case_Worker.permissionset-meta.xml`](../force-app/main/default/permissionsets/ISANS_Case_Worker.permissionset-meta.xml). Required PSLs assigned to the CLI user: `BenefitManagementPermissionSetLicense`, `IndustriesAssessmentPsl`, `ProgramManagementPsl`, `Salesforce_org_NonprofitCloudCaseManagementPsl`. Required standard permission sets assigned: `AdvancedProgramManagement`, `BenefitManagementPermissionSetLicense`, `IndustriesAssessmentPermissionSet`. Verified with `SELECT COUNT() FROM Program` → 5 records. |
+
+## 8. Existing data on `vscodeOrg` (revealed after the PSL fix)
+
+The org is not empty — it is a generic NPC demo with **pre-populated records** we must design alongside (or consciously displace):
+
+| Entity | Count | Notes |
+|--------|-------|-------|
+| `Program` | 5 | `Community Nutrition`, `Default Benefits Program`, `Financial IQ`, `Food Access`, `Job Placement`. None are ISANS-specific (no LINC, no settlement). |
+| `Benefit` | 22 | e.g. `Food Distribution`, `Financial Foundations`, `Interview Prep`, `Budgeting 1:1 Coaching`. |
+| `BenefitSchedule` | 5 | |
+| `BenefitSession` | 106 | |
+| `ProgramEnrollment` | 3,004 | ~1,001 enrollments each in Financial IQ / Food Access / Job Placement, 1 in Community Nutrition. All wired to `AccountId` (Person Accounts). |
+| `EnrollmentEligibilityCriteria` | 0 | No rules configured — greenfield for §3. |
+| `ProgramEnrlEligibilityCrit` | 0 | No criteria linked to programs yet. |
+| `AssessmentQuestion` | 39 | Existing Discovery Framework library. Needs catalog review before ISANS questions are added. |
+| `AssessmentQuestionResponse` | 3 | Minimal sample responses. |
+| `Account` (Person) | 6,573 | Existing client pool we can reuse. |
+
+**Decision needed before Milestone-1 build:** does ISANS mode **add** programs (e.g., LINC) on top of this generic demo, or do we **reset** the demo to an ISANS-only footprint? Default assumption: **add** (cheaper, reversible, lets us test coexistence with pre-existing attendance rollups).
