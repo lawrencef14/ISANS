@@ -2,6 +2,8 @@
 
 **ISANS demo:** Coordinated NPC enrollment (programs, benefits, eligibility, funder seats, support services) is specified in [docs/ISANS-coordinated-enrollment-plan.md](docs/ISANS-coordinated-enrollment-plan.md), with the verified schema in [docs/02-data-model.md](docs/02-data-model.md) and the Expression-Set-based eligibility engine in [docs/03-eligibility-engine.md](docs/03-eligibility-engine.md). **Org vs plan:** [docs/org-object-verification-vscodeOrg.md](docs/org-object-verification-vscodeOrg.md) — pinned org **`vscodeOrg`** has the NPC `Program` stack (after permission-set update). Alternate: [docs/org-object-verification-donor-demo.md](docs/org-object-verification-donor-demo.md).
 
+**Seed demo data (add-alongside):** from the repo root, run `./scripts/seed-isans-programs.sh` (requires `jq`). It creates three `Program` records named `ISANS - LINC`, `ISANS - Settlement Services`, and `ISANS - Employment & Career`, each with benefits, one `BenefitSchedule` per benefit, and sample `BenefitSession` rows. Re-runs are skipped unless you pass `--force`.
+
 Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
 
 ## How Do You Plan to Deploy Your Changes?

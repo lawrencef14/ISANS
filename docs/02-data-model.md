@@ -133,3 +133,5 @@ The org is not empty — it is a generic NPC demo with **pre-populated records**
 | `Account` (Person) | 6,573 | Existing client pool we can reuse. |
 
 **Decision (Milestone-1 footprint):** **(A) Add alongside** — new ISANS programs (e.g., LINC, settlement services) are created in addition to the five generic demo programs. Existing enrollments, benefits, and sessions are left intact so we can validate coexistence and attendance rollups without destructive cleanup.
+
+**Seeded ISANS footprint:** repeatable CLI seed in [`scripts/seed-isans-programs.sh`](../scripts/seed-isans-programs.sh). It inserts three programs (`ISANS - LINC`, `ISANS - Settlement Services`, `ISANS - Employment & Career`), nine benefits, nine schedules, and twelve sessions (Feb–Mar 2026 placeholder datetimes). Idempotent on `Name LIKE 'ISANS -%'` unless `--force`. If you delete those programs later, remove any `ProgramRecommendationRule` children first — the org may auto-create them and block `Program` delete.
