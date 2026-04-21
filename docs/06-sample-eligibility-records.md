@@ -35,6 +35,30 @@ sf data query --query "SELECT Id, Name, Status, ExecutionProcedure.Name FROM Enr
 sf data query --query "SELECT Id, Program.Name, EnrollmentEligibilityCrit.Name, IsRequired FROM ProgramEnrlEligibilityCrit WHERE EnrollmentEligibilityCrit.Name = 'ISANS Sample - LINC age gate (demo rule)'" --target-org vscodeOrg
 ```
 
+## Troubleshooting: Lightning “ORG_ADMIN_LOCKED” on `ProgramEnrlEligibilityCrit`
+
+If opening **Program Enrollment Eligibility Criteria** shows a generic error and the technical detail includes **`ORG_ADMIN_LOCKED: admin operation already in progress`**, that is a **temporary Salesforce platform lock** on the org (not a bad field value on the sample row). Common causes:
+
+- A **deployment or validation** is running (**Setup → Deployment Status**).
+- **Metadata retrieve/deploy**, change sets, or package installs in another tab or by another admin.
+- **Sandbox refresh**, release update, or background **maintenance** Salesforce is applying.
+
+**What to do**
+
+1. Wait **5–15 minutes** and open the record again (often enough).
+2. Check **Setup → Deployment Status** and wait until nothing is *In Progress*.
+3. Ask whether anyone else is **deploying or running bulk admin** work in the same org.
+4. Try a **hard refresh** or another browser session after the wait.
+5. If it persists for **hours**, open a case with Salesforce and include the **Error ID** from the message.
+
+You can still **confirm the data** with SOQL or the CLI while the UI is flaky:
+
+```bash
+sf data query --query "SELECT Id, Program.Name, EnrollmentEligibilityCrit.Name, IsRequired FROM ProgramEnrlEligibilityCrit WHERE Id = '20bHu0000000049IAA'" --target-org vscodeOrg
+```
+
+(Replace the Id if your junction Id differs.)
+
 ## Remove (optional)
 
 Delete the junction first, then the criteria (order may matter if other references exist):
