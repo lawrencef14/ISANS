@@ -15,6 +15,25 @@ Authoring a custom evaluator on top of that object would either:
 
 Neither is justified when the native hook (`ExecutionProcedureId`) is already present and the org already has **OmniStudio** installed as a package (seen in `InstalledSubscriberPackage`). We'll use Expression Sets.
 
+### 1.1 How to configure a rule (what you actually do in Salesforce)
+
+NPC does **not** let you type “IF age is at least 18 AND language equals X” on the **`EnrollmentEligibilityCriteria`** or **`ProgramEnrlEligibilityCrit`** record itself. Those rows are **wiring**:
+
+| What you configure | What it does |
+|--------------------|----------------|
+| **Expression Set** (Business Rules Engine) | Holds the **real rule**: conditions, branches, messages, input/output contract. Edited in the **Expression Set** authoring experience (often from **OmniStudio** / **Business Rules** tooling — exact app name varies by org and release). |
+| **`EnrollmentEligibilityCriteria`** | Names the rule, sets **Status**, and sets **Execution Procedure** = lookup to the **Expression Set** that should run. |
+| **`ProgramEnrlEligibilityCrit`** | Says **which program** uses **which criteria row**, and flags like **Is Required**. No formula editor here. |
+
+**Practical sequence**
+
+1. **Create or clone an Expression Set** for the real policy (e.g. “ISANS LINC age 18+”). Do **not** rely on demo sets like `Repair Eligibility` for production meaning — only for plumbing tests. Author the logic inside the Expression Set UI so its **inputs** match the contract you intend (see §5 — e.g. `clientProfile.dateOfBirth`). Publish/activate if your product version requires it.
+2. **Create an `EnrollmentEligibilityCriteria` record** (or edit yours): set **Name**, **Description**, **Status** = `Active`, and **Execution Procedure** = your Expression Set from step 1.
+3. **Create a `ProgramEnrlEligibilityCrit` record**: **Program** = e.g. `ISANS - LINC`, **Enrollment Eligibility Criteria** = the row from step 2, **Is Required** as needed.
+4. **Runtime** (when `EligibilityService` exists): Apex loads the junction rows for the program, reads each criteria’s **Execution Procedure** Id, and **invokes** that Expression Set with a populated input map.
+
+If you only open the junction or criteria record in Lightning, you are mostly **confirming links** — the “rule” is configured when you **open and edit the Expression Set** that **Execution Procedure** points to. Use **Setup** quick find for **Expression Set** or the **OmniStudio** app (your org’s tiles may differ).
+
 ## 2. Current state on `vscodeOrg`
 
 | Artefact | Count | Notes |
