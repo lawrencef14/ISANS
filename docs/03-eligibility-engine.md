@@ -36,6 +36,8 @@ If you only open the junction or criteria record in Lightning, you are mostly **
 
 **Concrete UI walkthrough (under-max-age, configurable threshold):** [07-expression-set-under-max-age-ui.md](07-expression-set-under-max-age-ui.md).
 
+**Flexibility (swap variables, combine logic, UX):** [08-eligibility-flexibility-multi-factor.md](08-eligibility-flexibility-multi-factor.md).
+
 ## 2. Current state on `vscodeOrg`
 
 | Artefact | Count | Notes |

@@ -4,6 +4,8 @@ This guide is for **authoring in the Salesforce UI** (no metadata retrieve). It 
 
 > **Product context:** `EnrollmentEligibilityCriteria.ExecutionProcedureId` points at an **Expression Set**. The criteria row does not hold the math; the Expression Set does. See [03-eligibility-engine.md §1.1](03-eligibility-engine.md).
 
+> **Broader flexibility** (other variables, AND/OR across factors, multiple rules, case-worker UX): see [08-eligibility-flexibility-multi-factor.md](08-eligibility-flexibility-multi-factor.md). This age guide is a **minimal** pattern, not the limit of what BRE supports.
+
 ## Before you start
 
 - Confirm you can open **OmniStudio** or **Expression Sets** (Business Rules Engine). If you do not see them, your user needs the **OmniStudio Designer** permission set license (and related permissions) assigned — same family of access as other OmniStudio tools.

@@ -8,7 +8,7 @@
 
 **Sample eligibility (optional):** `./scripts/seed-isans-eligibility-sample.sh` creates one `EnrollmentEligibilityCriteria` + `ProgramEnrlEligibilityCrit` for `ISANS - LINC` (see [docs/06-sample-eligibility-records.md](docs/06-sample-eligibility-records.md)).
 
-**Expression Set (UI):** step-by-step to build an “under max age” rule (e.g. under 12) with a configurable threshold — [docs/07-expression-set-under-max-age-ui.md](docs/07-expression-set-under-max-age-ui.md).
+**Expression Set (UI):** step-by-step to build an “under max age” rule (e.g. under 12) with a configurable threshold — [docs/07-expression-set-under-max-age-ui.md](docs/07-expression-set-under-max-age-ui.md). For **multi-factor rules, swapping variables, and UX** — [docs/08-eligibility-flexibility-multi-factor.md](docs/08-eligibility-flexibility-multi-factor.md).
 
 Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
 
