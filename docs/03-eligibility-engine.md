@@ -34,6 +34,8 @@ NPC does **not** let you type “IF age is at least 18 AND language equals X” 
 
 If you only open the junction or criteria record in Lightning, you are mostly **confirming links** — the “rule” is configured when you **open and edit the Expression Set** that **Execution Procedure** points to. Use **Setup** quick find for **Expression Set** or the **OmniStudio** app (your org’s tiles may differ).
 
+**Concrete UI walkthrough (under-max-age, configurable threshold):** [07-expression-set-under-max-age-ui.md](07-expression-set-under-max-age-ui.md).
+
 ## 2. Current state on `vscodeOrg`
 
 | Artefact | Count | Notes |
