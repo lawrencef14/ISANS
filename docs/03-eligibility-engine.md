@@ -4,6 +4,8 @@ Replaces the canvas's "row-based criteria evaluator" with the native Salesforce 
 
 > See [02-data-model.md §3](02-data-model.md) for the underlying schema finding.
 
+> **Demo overload?** If NPC + Expression Sets is too heavy for the **pilot UX**, use the lighter **data-driven** pattern in [09-demo-eligibility-lite-architecture.md](09-demo-eligibility-lite-architecture.md) (age **and/or** income, end-user–editable rules). Native BRE remains the long-term production direction documented below.
+
 ## 1. Why Expression Sets (and why not a custom evaluator)
 
 The canvas drafted `Logic_Operator__c` / `Target_Value__c` / `Data_Type__c` / `Logic_Group__c` fields on `EnrollmentEligibilityCriteria`. **Those fields do not exist** on the standard object — only `Name`, `Description`, `Status`, `ExecutionProcedureId` (Lookup → `ExpressionSet`), plus system/provenance fields.
