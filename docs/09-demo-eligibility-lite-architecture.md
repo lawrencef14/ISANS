@@ -90,10 +90,40 @@ This document describes a **deliberately simpler** pattern: **custom, data-drive
 | Sample rules on org | Run [`scripts/seed-isans-eligibility-lite-rules.sh`](../scripts/seed-isans-eligibility-lite-rules.sh) after deploy (under-12 + 50k income for **ISANS - LINC**). |
 | Permissions | **`ISANS_Case_Worker`** includes Account, Contact (read), custom object CRUD, income field, Apex class access. |
 
-### Add the LWC to a Case page
+### Add the LWC to a Case page (Nonprofit / IDO orgs included)
 
-1. **Setup** → **Lightning App Builder** → open an app’s **Case** record page (or create one).  
-2. Drag **ISANS Eligibility Lite** onto the page. **Save** and **Activate**.
+You are not editing the **Program** or **Expression Set** here. You are only choosing **where the little “Eligibility Lite” panel appears** when someone opens a **Case** in Lightning.
+
+**Prerequisites:** The metadata is **deployed** to this org, and your user can use **Lightning App Builder** (often **Customize Application** or a profile that allows editing Lightning pages).
+
+#### Path A — Fastest (from an open Case)
+
+1. In Lightning, open **any Case** (the same way case workers would: Cases tab, list view, or from a related record).
+2. Click the **gear icon** (⚙️) in the top-right → **Edit Page**.  
+   - If you do **not** see **Edit Page**, you may lack permission: use **Path B** with a System Administrator, or ask an admin to assign **Lightning Experience** page editing rights.
+3. You are now in **Lightning App Builder** on the **Case Record Page** for the app you came from (e.g. Service Console, Nonprofit, or your IDO app — the name does not matter; the **object** is Case).
+4. On the **left**, scroll the component list to **Custom** (or use the search box at the top of the palette).
+5. Find **ISANS Eligibility Lite** and **drag** it into a region (e.g. right column or a new tab). Resize if prompted.
+6. Click **Save**, then **Activate** (or **Assign as Org Default** / **Assign to this app only** — pick what your org’s dialog offers so the page is the one users actually see for Cases in that app).
+
+#### Path B — From Setup (if you prefer the menu)
+
+1. Click the **gear** → **Setup**.
+2. Quick Find box: type **`Lightning App Builder`** → open it.
+3. Click **New** → **Record Page** → **Next**.
+4. **Object** = **Case** → give the page a label (e.g. `Case ISANS Eligibility`) → **Next** → choose a template (e.g. **Header and Right Sidebar**) → **Finish**.
+5. Drag **ISANS Eligibility Lite** from **Custom** onto the layout → **Save** → **Activate** and assign it to the **app** where your team works (e.g. your Nonprofit / IDO Lightning app) and **form factor** (Desktop).
+
+#### If you cannot find “ISANS Eligibility Lite” in the palette
+
+- Confirm deploy: **Setup** → **Custom Code** → **Lightning Components** and search `isans` / **ISANS Eligibility Lite**.
+- Confirm the component’s target is **Case** (it is in metadata). It will **not** appear on Account or Contact pages.
+- Try **refresh** the App Builder tab after deploy.
+
+#### After it is on the page
+
+1. Open a Case whose **Account** is a **Person Account** with **Birthdate** filled (and **ISANS Annual Household Income** if you use income rules).
+2. In the panel: choose a **Program** (defaults to names starting with `ISANS` if any exist), then **Run eligibility check**.
 
 ### Seed sample rules (CLI)
 
