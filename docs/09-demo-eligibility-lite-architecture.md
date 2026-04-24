@@ -125,6 +125,33 @@ You are not editing the **Program** or **Expression Set** here. You are only cho
 1. Open a Case whose **Account** is a **Person Account** with **Birthdate** filled (and **ISANS Annual Household Income** if you use income rules).
 2. In the panel: choose a **Program** (defaults to names starting with `ISANS` if any exist), then **Run eligibility check**.
 
+---
+
+### If you are on a Screen Flow (no “Edit Page”)
+
+**Screen Flow** runs in a **Flow** runtime UI. There is **no** Lightning **gear → Edit Page** there — that menu exists only on **standard Lightning record pages** (and similar record experiences).
+
+You have **two** options:
+
+#### Option A — Edit the real Case record page (no Flow change)
+
+1. Leave the Screen Flow (finish or cancel, or open a new browser tab).
+2. Go to the **Cases** tab (or global search for **Cases**), open the **same** Case from a **list** so you see the **normal Case record** (tabs like Details, Related — not a big Flow wizard filling the whole screen).
+3. Now use **gear → Edit Page** as in **Path A** above.  
+   *If your org always deep-links Cases into a Flow and you never see the standard Case page, use **Option B** or ask an admin which Lightning app still uses the standard Case layout.*
+
+#### Option B — Put the component **inside** your Screen Flow (recommended if Cases = Flow)
+
+The LWC **`isansEligibilityLite`** is also exposed to **Flow** as a screen component.
+
+1. **Setup** → Quick Find **Flows** → open the Flow that runs when you “see” the Case (or create a test Flow).
+2. Add or edit a **Screen** element.
+3. On that screen, add component **ISANS Eligibility Lite** (under **Custom** / **Screen components**).
+4. Set **Case Id** to your Flow’s Case variable (e.g. `Case.Id` from a Get Records, or the `{!recordId}` from a record-triggered flow, depending on how your Flow is built).
+5. **Save** and **Activate** the Flow.
+
+After redeploy, Flow Builder shows the **Case Id** input on the component because the metadata exposes `lightning__FlowScreen` with a `recordId` input.
+
 ### Seed sample rules (CLI)
 
 ```bash

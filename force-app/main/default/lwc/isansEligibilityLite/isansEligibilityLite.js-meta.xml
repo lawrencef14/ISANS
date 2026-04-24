@@ -3,15 +3,26 @@
     <apiVersion>66.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>ISANS Eligibility Lite</masterLabel>
-    <description>Runs data-driven program eligibility (age/income) for the Case’s Account.</description>
+    <description>Runs data-driven program eligibility (age/income) for the Case’s Account. Use on a Case record page, or on a Flow Screen (pass Case Id).</description>
     <targets>
         <target>lightning__RecordPage</target>
+        <target>lightning__FlowScreen</target>
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__RecordPage">
             <objects>
                 <object>Case</object>
             </objects>
+        </targetConfig>
+        <targetConfig targets="lightning__FlowScreen">
+            <property
+                name="recordId"
+                type="String"
+                label="Case Id"
+                description="The Case record Id from the Flow (e.g. a resource whose value is the Case Id)."
+                role="inputOnly"
+                required="true"
+            />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
