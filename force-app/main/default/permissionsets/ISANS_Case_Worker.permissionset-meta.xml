@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <label>ISANS Case Worker</label>
-    <description>Read/Edit on NPC Program, Benefit, BenefitSchedule, BenefitSession, ProgramEnrollment, EnrollmentEligibilityCriteria, ProgramEnrlEligibilityCrit, AssessmentQuestion, AssessmentQuestionResponse, and Case for ISANS coordinated enrollment.</description>
+    <description>NPC Program stack, Case, Account, ISANS_Program_Eligibility_Rule__c, Discovery assessments, and Eligibility Lite Apex for coordinated enrollment demo.</description>
     <hasActivationRequired>false</hasActivationRequired>
     <license>Salesforce</license>
+
+    <classAccesses>
+        <apexClass>ISANS_EligibilityLiteService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.ISANS_Annual_Household_Income__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
 
     <objectPermissions>
         <object>BenefitType</object>
@@ -110,6 +121,33 @@
         <allowCreate>true</allowCreate>
         <allowEdit>true</allowEdit>
         <allowDelete>false</allowDelete>
+        <viewAllRecords>true</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Contact</object>
+        <allowRead>true</allowRead>
+        <allowCreate>false</allowCreate>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Account</object>
+        <allowRead>true</allowRead>
+        <allowCreate>true</allowCreate>
+        <allowEdit>true</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>ISANS_Program_Eligibility_Rule__c</object>
+        <allowRead>true</allowRead>
+        <allowCreate>true</allowCreate>
+        <allowEdit>true</allowEdit>
+        <allowDelete>true</allowDelete>
         <viewAllRecords>true</viewAllRecords>
         <modifyAllRecords>false</modifyAllRecords>
     </objectPermissions>

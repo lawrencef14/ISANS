@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Rule_Type__c</fullName>
+    <description>Which check to run against the client.</description>
+    <externalId>false</externalId>
+    <label>Rule Type</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Max_Age_Exclusive</fullName>
+                <default>false</default>
+                <label>Maximum age (exclusive)</label>
+            </value>
+            <value>
+                <fullName>Min_Age_Inclusive</fullName>
+                <default>false</default>
+                <label>Minimum age (inclusive)</label>
+            </value>
+            <value>
+                <fullName>Max_Annual_Income</fullName>
+                <default>false</default>
+                <label>Maximum annual household income</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

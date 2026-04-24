@@ -1,0 +1,55 @@
+<template>
+    <lightning-card title="ISANS Eligibility Lite" icon-name="utility:rules">
+        <div class="slds-p-around_small">
+            <template if:true={loadingPrograms}>
+                <lightning-spinner alternative-text="Loading programs" size="small"></lightning-spinner>
+            </template>
+
+            <lightning-combobox
+                name="program"
+                label="Program"
+                value={selectedProgramId}
+                placeholder="Select a program"
+                options={programOptions}
+                onchange={handleProgramChange}
+                disabled={loadingPrograms}
+            ></lightning-combobox>
+
+            <div class="slds-m-top_small">
+                <lightning-button
+                    variant="brand"
+                    label="Run eligibility check"
+                    onclick={handleEvaluate}
+                    disabled={evaluating}
+                ></lightning-button>
+                <template if:true={evaluating}>
+                    <lightning-spinner alternative-text="Evaluating" size="small" class="slds-m-left_small"></lightning-spinner>
+                </template>
+            </div>
+
+            <template if:true={result}>
+                <div class="slds-m-top_medium">
+                    <template if:true={result.overallPass}>
+                        <div class="slds-text-heading_small slds-text-color_success">{result.summary}</div>
+                    </template>
+                    <template if:false={result.overallPass}>
+                        <div class="slds-text-heading_small slds-text-color_error">{result.summary}</div>
+                    </template>
+                    <ul class="slds-list_dotted slds-m-top_small">
+                        <template for:each={result.ruleResults} for:item="row">
+                            <li key={row.ruleId}>
+                                <template if:true={row.passed}>
+                                    <span class="slds-text-color_success">{row.ruleType}</span>
+                                </template>
+                                <template if:false={row.passed}>
+                                    <span class="slds-text-color_error">{row.ruleType}</span>
+                                </template>
+                                — {row.message}
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

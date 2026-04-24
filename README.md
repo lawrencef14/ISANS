@@ -10,7 +10,7 @@
 
 **Expression Set (UI):** step-by-step to build an “under max age” rule (e.g. under 12) with a configurable threshold — [docs/07-expression-set-under-max-age-ui.md](docs/07-expression-set-under-max-age-ui.md). For **multi-factor rules, swapping variables, and UX** — [docs/08-eligibility-flexibility-multi-factor.md](docs/08-eligibility-flexibility-multi-factor.md).
 
-**Demo shortcut (simpler than NPC + Expression Sets):** data-driven rules for **age and/or income** that end users edit as records + one evaluator — [docs/09-demo-eligibility-lite-architecture.md](docs/09-demo-eligibility-lite-architecture.md).
+**Eligibility Lite (deployed scaffold):** `ISANS_Program_Eligibility_Rule__c`, `Account.ISANS_Annual_Household_Income__c`, Apex `ISANS_EligibilityLiteService`, LWC `isansEligibilityLite` on Case. Doc: [docs/09-demo-eligibility-lite-architecture.md](docs/09-demo-eligibility-lite-architecture.md). Sample rules: `./scripts/seed-isans-eligibility-lite-rules.sh`.
 
 Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
 

@@ -79,11 +79,34 @@ This document describes a **deliberately simpler** pattern: **custom, data-drive
 
 ---
 
-## Recommended next step
+## What is in the repo now (scaffolded)
 
-1. Agree on **v1 = AND all rules** (sufficient for “age **and** income”).  
-2. Add **`ISANS_Program_Eligibility_Rule__c`** + **income field** (Account or child object).  
-3. Implement **`ISANS_EligibilityLite`** invocable + **thin LWC** on Case.  
-4. Optional: **Screen Flow** “New rule” for non–list-view admins.
+| Piece | Location |
+|-------|----------|
+| Custom object **`ISANS_Program_Eligibility_Rule__c`** | `force-app/main/default/objects/ISANS_Program_Eligibility_Rule__c/` |
+| Account field **`ISANS_Annual_Household_Income__c`** | `force-app/main/default/objects/Account/fields/` |
+| **`ISANS_EligibilityLiteService`** | `@AuraEnabled` `evaluate`, `listProgramsForPicker`, `@InvocableMethod` `evaluateInvocable` |
+| LWC **`isansEligibilityLite`** | Case record page — pick program, run check against **Case.AccountId** |
+| Sample rules on org | Run [`scripts/seed-isans-eligibility-lite-rules.sh`](../scripts/seed-isans-eligibility-lite-rules.sh) after deploy (under-12 + 50k income for **ISANS - LINC**). |
+| Permissions | **`ISANS_Case_Worker`** includes Account, Contact (read), custom object CRUD, income field, Apex class access. |
 
-If you want this in the repo next, say **“scaffold Eligibility Lite”** and we add the metadata + Apex + a one-page admin guide (still no change to your commitment to NPC programs for delivery).
+### Add the LWC to a Case page
+
+1. **Setup** → **Lightning App Builder** → open an app’s **Case** record page (or create one).  
+2. Drag **ISANS Eligibility Lite** onto the page. **Save** and **Activate**.
+
+### Seed sample rules (CLI)
+
+```bash
+./scripts/seed-isans-eligibility-lite-rules.sh --target-org vscodeOrg
+```
+
+Requires **`ISANS - LINC`** from `./scripts/seed-isans-programs.sh`.
+
+---
+
+## Recommended next steps (optional polish)
+
+1. **Screen Flow** “Add eligibility rule” for admins who prefer wizards over list views.  
+2. **Custom Metadata** for default thresholds if you want zero-code tuning without touching rule rows.  
+3. **Rule_Group__c** when you need OR-within-groups (see §2 of this doc).

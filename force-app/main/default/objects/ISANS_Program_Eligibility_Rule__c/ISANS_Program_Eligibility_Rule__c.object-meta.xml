@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Demo-friendly data-driven eligibility rules per Program (age and/or income). See docs/09-demo-eligibility-lite-architecture.md</description>
+    <label>ISANS Program Eligibility Rule</label>
+    <nameField>
+        <displayFormat>IER-{00000}</displayFormat>
+        <label>Rule Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>ISANS Program Eligibility Rules</pluralLabel>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>
