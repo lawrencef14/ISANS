@@ -148,9 +148,10 @@ The LWC **`isansEligibilityLite`** is also exposed to **Flow** as a screen compo
 2. Add or edit a **Screen** element.
 3. On that screen, add component **ISANS Eligibility Lite** (under **Custom** / **Screen components**).
 4. Set **Case Id** to your Flow’s Case variable (e.g. `Case.Id` from a Get Records, or the `{!recordId}` from a record-triggered flow, depending on how your Flow is built).
-5. **Save** and **Activate** the Flow.
+5. **Optional — Add Participant:** If your demo uses **Add Participant** and stores the chosen **Person Account Id** in a Flow variable (e.g. `{!Participant_Account.Id}`), set the component’s **Participant Account Id (optional)** to that variable. When set, the check uses **that** account’s birthdate and income fields instead of **Case.Account** (so the demo matches “participant just added”).
+6. **Save** and **Activate** the Flow.
 
-After redeploy, Flow Builder shows the **Case Id** input on the component because the metadata exposes `lightning__FlowScreen` with a `recordId` input.
+After redeploy, Flow Builder shows **Case Id** and **Participant Account Id (optional)** on the component.
 
 ### Seed sample rules (CLI)
 

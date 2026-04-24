@@ -11,6 +11,8 @@ const CASE_FIELDS = [ACCOUNT_ID_FIELD];
 
 export default class IsansEligibilityLite extends LightningElement {
     @api recordId;
+    /** When set from a Flow Screen (e.g. after Add Participant), overrides Case.AccountId for evaluate(). */
+    @api clientAccountId;
 
     programOptions = [];
     selectedProgramId;
@@ -52,10 +54,6 @@ export default class IsansEligibilityLite extends LightningElement {
 
     async handleEvaluate() {
         this.result = null;
-        if (!this.recordId) {
-            this.toast('Case required', 'Open this panel on a Case record.', 'warning');
-            return;
-        }
         if (!this.selectedProgramId) {
             this.toast('Program required', 'Choose a program.', 'warning');
             return;
@@ -63,9 +61,14 @@ export default class IsansEligibilityLite extends LightningElement {
 
         this.evaluating = true;
         try {
-            const accId = this.caseAccountId;
+            const fromFlow = this.clientAccountId && String(this.clientAccountId).trim();
+            const accId = fromFlow || this.caseAccountId;
             if (!accId) {
-                this.toast('Account required', 'Populate Case.Account before running eligibility.', 'warning');
+                this.toast(
+                    'Client Account required',
+                    'Populate Case.Account, or pass Participant Account Id from the Flow after Add Participant.',
+                    'warning'
+                );
                 this.evaluating = false;
                 return;
             }

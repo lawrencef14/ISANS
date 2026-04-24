@@ -3,7 +3,7 @@
     <apiVersion>66.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>ISANS Eligibility Lite</masterLabel>
-    <description>Runs data-driven program eligibility (age/income) for the Case’s Account. Use on a Case record page, or on a Flow Screen (pass Case Id).</description>
+    <description>Runs data-driven program eligibility (age/income). On Case pages uses Case.Account; on Flow Screens pass Case Id and optionally Participant Account Id (e.g. after Add Participant).</description>
     <targets>
         <target>lightning__RecordPage</target>
         <target>lightning__FlowScreen</target>
@@ -19,9 +19,17 @@
                 name="recordId"
                 type="String"
                 label="Case Id"
-                description="The Case record Id from the Flow (e.g. a resource whose value is the Case Id)."
+                description="The Case record Id (for context and default Account when participant is not passed)."
                 role="inputOnly"
                 required="true"
+            />
+            <property
+                name="clientAccountId"
+                type="String"
+                label="Participant Account Id (optional)"
+                description="Person Account Id from Add Participant (or similar). When set, overrides Case.Account for the eligibility check."
+                role="inputOnly"
+                required="false"
             />
         </targetConfig>
     </targetConfigs>
